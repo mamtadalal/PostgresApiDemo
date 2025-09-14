@@ -1,0 +1,37 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-api
+  template:
+    metadata:
+      labels:
+        app: postgres-api
+    spec:
+      containers:
+      - name: postgres-api
+        image: postgresapidemo
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        env:
+        - name: ConnectionStrings__DefaultConnection
+          value: "Host=postgres-service;Database=productsdb;Username=postgres;Password=postgres"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-api-service
+spec:
+  type: NodePort
+  selector:
+    app: postgres-api
+  ports:
+  - port: 80
+    targetPort: 8080
+    nodePort: 30081
+           

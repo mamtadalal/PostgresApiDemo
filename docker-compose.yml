@@ -1,0 +1,22 @@
+﻿services:
+  postgresapidemo:
+    image: postgresapidemo
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:8080"  # Corrected: Host 5000 → Container 8080
+    depends_on:
+      - postgres
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=productsdb;Username=postgres;Password=postgres
+
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: productsdb
+    ports:
+      - "5432:5432"  # Reverted to the correct internal PostgreSQL port
